@@ -9,7 +9,47 @@ def main():
     grid_printer(matrix)
     coincidence_list = coincidence_finder(encrypted, matrix)
     print(coincidence_list)
-    print(percentage_maker(encrypted, 2))
+    percent_list = percentage_maker(encrypted, 2)
+    print(percent_list)
+    combination_list = get_max_freq(percent_list)
+    print(combination_list)
+
+
+def get_max_freq(percent_list):
+    """
+    Function that creates a list with all of the frequency possibilities to find the greatest overlap between
+    the frequency of English and the frequency of the encrypted text
+    :param percent_list: The frequency of the letters
+    :return: A list with all the frequency possibilities
+    """
+    freq_dict = {'E': 12.70, 'T': 9.06, 'A': 8.17, 'O': 7.51, 'I': 6.97, 'N': 6.75, 'S': 6.33, 'H': 6.09, 'R': 5.99, \
+                 'D': 4.25, 'L': 4.03, 'C': 2.78, 'U': 2.76, 'M': 2.41, 'W': 2.36, 'F': 2.23, 'G': 2.02, 'Y': 1.97, \
+                 'P': 1.93, 'B': 1.29, 'V': 0.98, 'K': 0.77, 'J': 0.15, 'X': 0.15, 'Q': 0.10, 'Z': 0.07}
+
+    ordered_freq = []
+    for letter in string.ascii_uppercase:
+        ordered_freq.append(freq_dict[letter])
+
+    temp_percent = percent_list[:]
+    combination_list = []
+    for x in range(26):
+        temp_total = 0
+        for y in range(26):
+            temp_total += ordered_freq[y] * temp_percent[y]
+        combination_list.append(temp_total)
+        temp_percent = shift(temp_percent, 1)
+        print(temp_percent)
+    return combination_list
+
+
+def shift(someList, n):
+    """
+    Simple shift method to emulate a circular
+    :param someList:
+    :param n:
+    :return:
+    """
+    return someList[n:] + someList[:n]
 
 
 def percentage_maker(encrypted, keyLength):
