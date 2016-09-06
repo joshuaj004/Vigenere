@@ -9,21 +9,15 @@ def main():
     matrix = grid_generator(encrypted)
     #grid_printer(matrix)
     coincidence_list = coincidence_finder(encrypted, matrix)
-    #print(coincidence_list)
     tempList = coincidence_list[:10]
     tempKey = tempList.index(max(tempList)) + 1
-    print(tempKey)
-    #TODO: implement a smart way to get the key length
-    key_len = 6
+    #print(tempKey)
+    key_len = tempKey
     key = []
     for x in range(key_len):
-        percent_list = percentage_maker(encrypted, 6, x)
-        #print(percent_list)
-        #print(percent_list)
+        percent_list = percentage_maker(encrypted, key_len, x)
         combination_list = get_max_freq(percent_list) + 1
         key.append(combination_list)
-    #print(combination_list)
-    #print(key)
     newKey = list_to_letter(key)
     print(newKey)
     message = decrypter(encrypted, newKey)
@@ -31,6 +25,12 @@ def main():
 
 
 def decrypter(encrypted, key):
+    """
+    Simple decrypter for a vigenere cipher given a key.
+    :param encrypted: The encrypted message.
+    :param key: The key.
+    :return: Returns the plaintext message.
+    """
     message = ""
     currentPlace = 0
     for x in range(len(encrypted)):
@@ -42,6 +42,11 @@ def decrypter(encrypted, key):
 
 
 def list_to_letter(letterList):
+    """
+    Converts a list of numbers to uppercase letters
+    :param letterList: List of numbers
+    :return: Letters.
+    """
     letters = ""
     for num in letterList:
         letters += chr(64 + num)
