@@ -6,7 +6,19 @@ def main():
     print(encrypted)
     matrix = grid_generator(encrypted)
     grid_printer(matrix)
+    coincidence_list = coincidence_finder(encrypted, matrix)
+    print(coincidence_list)
 
+
+def coincidence_finder(encrypted, matrix):
+    coincidence_list = []
+    for offset in matrix:
+        tempCount = 0
+        for x in range(len(encrypted)):
+            if offset[x] == encrypted[x]:
+                tempCount += 1
+        coincidence_list.append(tempCount)
+    return coincidence_list
 
 def grid_printer(matrix):
     """
@@ -27,7 +39,7 @@ def grid_generator(encrypted):
     matrix = []
     for x in range(len(encrypted)):
         tempStr = " " * x
-        tempStr += encrypted[x:]
+        tempStr += encrypted[:len(encrypted) - x]
         matrix.append(tempStr)
     return matrix
 
