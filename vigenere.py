@@ -3,16 +3,35 @@ import string
 
 
 def main():
-    encrypted = "HUMXZLTUFXLLFXDDVMYTMTOSEKAGLFRIWFFSBRORVHLFGVXAVNXOSWFAVUHYUXBFAWWEMMANSKWSJJFVGRAYMRNG"
-    print(encrypted)
+    #encrypted = "HUMXZLTUFXLLFXDDVMYTMTOSEKAGLFRIWFFSBRORVHLFGVXAVNXOSWFAVUHYUXBFAWWEMMANSKWSJJFVGRAYMRNG"
+    encrypted = "CVJTNAFENMCDMKBXFSTKLHGSOJWHOFUISFYFBEXEINFIMAYSSDYYIJNPWTOKFRHWVWTZFXHLUYUMSGVDURBWBIVXFAFMYFYXPIGBHWIFHHOJBEXAUNFIYLJWDKNHGAOVBHHGVINAULZFOFUQCVFBYNFTYGMMSVGXCFZFOKQATUIFUFERQTEWZFOKMWOJYLNZBKSHOEBPNAYTFKNXLBVUAXCXUYYKYTFRHRCFUYCLUKTVGUFQBESWYSSWLBYFEFZVUWTRLLNGIZGBMSZKBTNTSLNNMDPMYMIUBVMTLOBJHHFWTJNAUFIZMBZLIVHMBSUWLBYFEUYFUFENBRVJVKOLLGTVUZUAOJNVUWTRLMBATZMFSSOJQXLFPKNAULJCIOYVDRYLUJMVMLVMUKBTNAMFPXXJPDYFIJFYUWSGVIUMBWSTUXMSSNYKYDJMCGASOUXBYSMCMEUNFJNAUFUYUMWSFJUKQWSVXXUVUFFBPWBCFYLWFDYGUKDRYLUJMFPXXEFZQXYHGFLACEBJBXQSTWIKNMORNXCJFAIBWWBKCMUKIVQTMNBCCTHLJYIGIMSYCFVMURMAYOBJUFVAUZINMATCYPBANKBXLWJJNXUJTWIKBATCIOYBPPZHLZJJZHLLVEYAIFPLLYIJIZMOUDPLLTHVEVUMBXPIBBMSNSCMCGONBHCKIVLXMGCRMXNZBKQHODESYTVGOUGTHAGRHRMHFREYIJIZGAUNFZIYZWOUYWQZPZMAYJFJIKOVFKBTNOPLFWHGUSYTLGNRHBZSOPMIYSLWIKBANYUOYAPWZXHVFUQAIATYYKYKPMCEYLIRNPCDMEIMFGWVBBMUPLHMLQJWUGSKQVUDZGSYCFBSWVCHZXFEXXXAQROLYXPIUKYHMPNAYFOFHXBSWVCHZXFEXXXAIRPXXGOVHHGGSVNHWSFJUKNZBESHOKIRFEXGUFVKOLVJNAYIVVMMCGOFZACKEVUMBATVHKIDMVXBHLIVWTJAUFFACKHCIKSFPKYQNWOLUMYVXYYKYAOYYPUKXFLMBQOFLACKPWZXHUFJYGZGSTYWZGSNBBWZIVMNZXFIYWXWBKBAYJFTIFYKIZMUIVZDINLFFUVRGSSBUGNGOPQAILIFOZBZFYUWHGIRHWCFIZMWYSUYMAUDMIYVYAWVNAYTFEYYCLPWBBMVZZHZUHMRWXCFUYYVIENFHPYSMKBTMOIZWAIXZFOLBSMCHHNOJKBMBATZXXJSSKNAULBJCLFWXDSUYKUCIOYJGFLMBWHFIWIXSFGXCZBMYMBWTRGXXSHXYKZGSDSLYDGNBXHAUJBTFDQCYTMWNPWHOFUISMIFFVXFSVFRNA"
+    #print(encrypted)
     matrix = grid_generator(encrypted)
-    grid_printer(matrix)
+    #grid_printer(matrix)
     coincidence_list = coincidence_finder(encrypted, matrix)
-    print(coincidence_list)
-    percent_list = percentage_maker(encrypted, 2)
-    print(percent_list)
-    combination_list = get_max_freq(percent_list)
-    print(combination_list)
+    #print(coincidence_list)
+    tempList = coincidence_list[:10]
+    tempKey = tempList.index(max(tempList)) + 1
+    print(tempKey)
+    #TODO: implement a smart way to get the key length
+    key_len = 6
+    key = []
+    for x in range(key_len):
+        percent_list = percentage_maker(encrypted, 6, x)
+        #print(percent_list)
+        #print(percent_list)
+        combination_list = get_max_freq(percent_list) + 1
+        key.append(combination_list)
+    #print(combination_list)
+    print(key)
+    print(list_to_letter(key))
+
+
+def list_to_letter(letterList):
+    letters = ""
+    for num in letterList:
+        letters += chr(64 + num)
+    return letters
 
 
 def get_max_freq(percent_list):
@@ -38,8 +57,8 @@ def get_max_freq(percent_list):
             temp_total += ordered_freq[y] * temp_percent[y]
         combination_list.append(temp_total)
         temp_percent = shift(temp_percent, 1)
-        print(temp_percent)
-    return combination_list
+        #print(temp_percent)
+    return combination_list.index(max(combination_list))
 
 
 def shift(someList, n):
@@ -52,7 +71,7 @@ def shift(someList, n):
     return someList[n:] + someList[:n]
 
 
-def percentage_maker(encrypted, keyLength):
+def percentage_maker(encrypted, keyLength, keyShift):
     """
     Takes in the encrypted message and the key length and creates a frequency percentage
     :param encrypted: The encrypted message.
@@ -62,7 +81,7 @@ def percentage_maker(encrypted, keyLength):
     freq_dict = {letter: 0 for letter in string.ascii_uppercase}
 
     for x in range(len(encrypted)):
-        if x % keyLength == 0:
+        if x % keyLength == keyShift:
             freq_dict[encrypted[x]] += 1
 
     percent_list = []
@@ -105,7 +124,7 @@ def grid_generator(encrypted):
     :return: returns a matrix that is primed for the coincidences counter
     """
     matrix = []
-    for x in range(len(encrypted)):
+    for x in range(1, len(encrypted)):
         tempStr = " " * x
         tempStr += encrypted[:len(encrypted) - x]
         matrix.append(tempStr)
